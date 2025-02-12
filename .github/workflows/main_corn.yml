@@ -1,8 +1,10 @@
-name: Daily Commit
+name: Daily Commit Workflow
 
 on:
   schedule:
-    - cron: '30 14 * * *'  # Runs at 14:30 UTC daily
+    # Runs at 10:30 AM UTC (specific time as required)
+    - cron: '30 10 * * *'
+  workflow_dispatch:  # Allows manual triggering for testing
 
 jobs:
   create-daily-commit:
@@ -12,14 +14,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         
-      - name: Setup Git config (mohit.dubey@gramener.com)
+      - name: Setup Git Config (mohit.dubey@gramener.com)
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "mohit.dubey@gramener.com"
           
       - name: Create and commit daily update
         run: |
-          echo "Daily update $(date)" >> daily-updates.txt
-          git add daily-updates.txt
-          git commit -m "Daily automated commit $(date)"
+          # Create or update a file with current timestamp
+          echo "Last updated: $(date)" > last_update.txt
+          
+          # Add and commit the changes
+          git add last_update.txt
+          git commit -m "Daily automated update $(date)"
           git push
